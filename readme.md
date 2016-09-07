@@ -22,12 +22,12 @@ The interpreter contains an arithmetic calculator, so there is no need to bring 
 
 **For example:**
 
-	mov x,1  			  means move 1 to x
-	mov x,x+y 			 means move the sum of x+y to x
+	mov x,1                          means move 1 to x
+	mov x,x+y                        means move the sum of x+y to x
 	mov x,(x+y)*(x-4)
-	print "hello,world"	prints string hello,world
-	call func1			 call a new function func1
-	ret					return from a function
+	print "hello,world"              prints string hello,world
+	call func1                       call a new function func1
+	ret                              return from a function
 
 ## To use: ##
 
