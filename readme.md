@@ -35,7 +35,7 @@ The interpreter contains an arithmetic calculator, so there is no need to bring 
 - program the assembly-like language in a file, test.s for example.
 - run the program by type the following commmand in terminal
 
-	./interpreter test.s
+	$ ./interpreter test.s
 
 - voilà, that's it!
 
