@@ -36,7 +36,7 @@ The interpreter contains an arithmetic calculator, so there is no need to bring 
 - run the program by type the following commmand in terminal
 
 
-    ./interpreter test.s
+	./interpreter test.s
 
 
 - voilà, that's it!
