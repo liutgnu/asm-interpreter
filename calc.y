@@ -6,16 +6,21 @@ extern int yylex();
 static int yyparse();
 extern FILE *yyin;
 static int yyerror(const char *s);
+static int reg_name_to_index(const char);
 static double res;
+static double regs_table[52] = {0,};
 %}
 %union {
 	double d;
+	char reg;
 }
 
 %token <d> NUM;
 %token ADD SUB MUL DIV
 %token LBK RBK EOL
 %token ABS
+%token OPCODE
+%token REG COMA QUOT 
 
 %type <d> line exp factor
 %right ADD SUB
@@ -45,6 +50,9 @@ exp: factor {
 factor: NUM {
 	$$ = $1;
 }
+| REG {
+	$$ = regs_table[reg_name_to_index(yylval.reg)];
+}
 | LBK exp RBK {
 	$$ = $2;
 }
@@ -53,11 +61,31 @@ factor: NUM {
 }
 ;
 %%
+static int reg_name_to_index(const char name)
+{
+	if (name > 'a' && name < 'z')
+		return name - 'a';
+	if (name > 'A' && name < 'Z')
+		return name - 'A';
+	printf("reg name error!\n");
+	exit(-1);
+}
+
 static int yyerror(char const *str)
 {
 	extern char *yytext;
 	fprintf(stderr, "parse error in %s\n", yytext);
 	return 0;
+}
+
+
+/****************export func********************/
+void init_regs(void)
+{
+	int i;
+	for (i = 0; i < 52; i++){
+		regs_table[i] = 3;
+	}
 }
 
 double calc_num(const char *expression)
