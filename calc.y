@@ -63,9 +63,9 @@ factor: NUM {
 %%
 static int reg_name_to_index(const char name)
 {
-	if (name > 'a' && name < 'z')
+	if (name >= 'a' && name <= 'z')
 		return name - 'a';
-	if (name > 'A' && name < 'Z')
+	if (name >= 'A' && name <= 'Z')
 		return name - 'A';
 	printf("reg name error!\n");
 	exit(-1);

@@ -4,7 +4,7 @@ extern void init_regs(void);
 int main(void)
 {
 	init_regs();
-	const char *exp[] = {"2+x", "4*(x-7)-8"};
+	const char *exp[] = {"2+x", "4*(a-7)-8"};
 	int i;
 	for (i = 0; i < 2; i++) {
 		printf("%s", exp[i]);
