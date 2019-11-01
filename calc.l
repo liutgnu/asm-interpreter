@@ -13,7 +13,7 @@
 "|" {return ABS;}
 [ \t] {}
 [0-9]*\.?[0-9]+ {yylval.d = atof(yytext); return NUM;}
-"mov|cmp|je|print|call|ret|halt" {return OPCODE;}
+"print" {yylval.opcode = "print"; return OPCODE;}
 [a-zA-Z] {yylval.reg = *yytext; return REG;}
 "," {return COMA;}
 "\"" {return QUOT;}

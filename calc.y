@@ -13,6 +13,7 @@ static double regs_table[52] = {0,};
 %union {
 	double d;
 	char reg;
+	char *opcode;
 }
 
 %token <d> NUM;
@@ -22,14 +23,19 @@ static double regs_table[52] = {0,};
 %token OPCODE
 %token REG COMA QUOT 
 
-%type <d> line exp factor
+%type <d> exp factor
+%type <opcode> OPCODE
 %right ADD SUB
 %right MUL DIV
 
 %%
-line: exp EOL {
-	res = $1;
+instruction: OPCODE exp EOL {
+	if (!strcmp($1, "print")) {
+		printf("=%lf\n", $2);
+	}	   
 }
+
+/*calculation related*/
 
 exp: factor {
 	$$ = $1;
