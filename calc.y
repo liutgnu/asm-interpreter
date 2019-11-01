@@ -25,6 +25,7 @@ static double regs_table[52] = {0,};
 
 %type <d> exp factor
 %type <opcode> OPCODE
+%type <reg> REG
 %right ADD SUB
 %right MUL DIV
 
@@ -33,6 +34,11 @@ instruction: OPCODE exp EOL {
 	if (!strcmp($1, "print")) {
 		printf("=%lf\n", $2);
 	}	   
+}
+|OPCODE REG COMA exp EOL {
+	if (!strcmp($1, "mov")) {
+		regs_table[reg_name_to_index($2)] = $4;
+	}
 }
 
 /*calculation related*/
@@ -80,7 +86,7 @@ static int reg_name_to_index(const char name)
 static int yyerror(char const *str)
 {
 	extern char *yytext;
-	fprintf(stderr, "parse error in %s\n", yytext);
+	fprintf(stderr, "parse error in %x\n", *yytext);
 	return 0;
 }
 

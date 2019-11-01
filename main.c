@@ -4,9 +4,9 @@ extern void init_regs(void);
 int main(void)
 {
 	init_regs();
-	const char *exp[] = {"print 2+x"};
+	const char *exp[] = {"mov x,117","mov y,3","print x + y"};
 	int i;
-	for (i = 0; i < 1; i++) {
+	for (i = 0; i < 3; i++) {
 		calc_num(exp[i]);
 	}
 	return 0;
