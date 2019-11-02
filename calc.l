@@ -4,7 +4,7 @@
 %}
 %%
 \"[^\f\v\n\0]*\" {yylval.str = strndup(yytext + 1, strchr(yytext + 1, '"') - yytext - 1); return STR;}
-[^\s]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext -1); return LABL;}
+[^\s]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
 print {yylval.opcode = "print"; return OPCODE;}
 mov {yylval.opcode = "mov"; return OPCODE;}
 [0-9]*\.?[0-9]+ {yylval.d = atof(yytext); return NUM;}
