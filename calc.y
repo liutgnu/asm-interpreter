@@ -14,6 +14,8 @@ static double regs_table[52] = {0,};
 	double d;
 	char reg;
 	char *opcode;
+	char *word;
+	char *str;
 }
 
 %token <d> NUM;
@@ -21,11 +23,13 @@ static double regs_table[52] = {0,};
 %token LBK RBK EOL
 %token ABS
 %token OPCODE
-%token REG COMA QUOT 
+%token REG COMA QUOT LABL STR
 
 %type <d> exp factor
 %type <opcode> OPCODE
 %type <reg> REG
+%type <word> LABL
+%type <str> STR
 %right ADD SUB
 %right MUL DIV
 
@@ -35,11 +39,27 @@ instruction: OPCODE exp EOL {
 		printf("=%lf\n", $2);
 	}	   
 }
+| LABL OPCODE exp EOL {
+	if (!strcmp($2, "print")) {
+		printf("=%lf\n", $3);
+	}	
+}
+| OPCODE STR EOL {
+	if (!strcmp($1, "print")) {
+		printf("=%s\n",$2);
+	}
+}
 |OPCODE REG COMA exp EOL {
 	if (!strcmp($1, "mov")) {
 		regs_table[reg_name_to_index($2)] = $4;
 	}
 }
+|LABL OPCODE REG COMA exp EOL {
+	if (!strcmp($2, "mov")) {
+		regs_table[reg_name_to_index($3)] = $5;
+	}
+}
+|LABL EOL {}
 
 /*calculation related*/
 
