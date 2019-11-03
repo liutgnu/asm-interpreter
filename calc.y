@@ -46,7 +46,12 @@ instruction: OPCODE exp EOL {
 }
 | OPCODE STR EOL {
 	if (!strcmp($1, "print")) {
-		printf("=%s\n",$2);
+		printf("=%s\n", $2);
+	}
+}
+| LABL OPCODE STR EOL {
+	if (!strcmp($2, "print")) {
+		printf("=%s\n", $3);
 	}
 }
 |OPCODE REG COMA exp EOL {
