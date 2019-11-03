@@ -1,5 +1,5 @@
-mov x, 123.17
-mov y, 23.17
-print x+y
-loop1:print "hellouuuu\n\n"
-loop2:print "\njjjj\n"
+mov x, 1
+loop:
+print x
+mov x, x+1
+jmp loop:

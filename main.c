@@ -12,15 +12,32 @@ typedef struct label_to_line {
 	char *label;
 } label_to_line;
 
-extern void calc_num(const char *);
+int PC = 0;
+bool FLAGS = false;
+
+extern void do_execute(const char *);
 extern void init_regs(void);
-int line_num = 0;
-char **program;
+static int line_num = 0;
+static char **program = NULL;
 
-int label_num = 0;
-label_to_line *labels;
+static int label_num = 0;
+static label_to_line *labels = NULL;
 
-int parse_file(const char *file_name)
+int convert_label_to_line(const char *label)
+{
+	int i;
+	if (!labels)
+		goto out;
+
+	for (i = 0; i < label_num; i++) {
+		if (!strcmp(label, labels[i].label))
+			return labels[i].line;
+	}
+out:
+	return -1;
+}
+
+static int parse_file(const char *file_name)
 {
 	int fd = 0, index = 0, i = 0, j = 0;
 	struct stat file_stat;
@@ -138,6 +155,12 @@ out:
 	return -1;
 }
 
+void execute(void)
+{
+	while(PC < line_num)
+		do_execute(program[PC++]);	
+}
+
 int main(int argc, char **argv)
 {
 /*
@@ -157,9 +180,6 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	init_regs();
-	printf("lines: %d\n",line_num);
-	for (int i = 0; i < line_num; i++) {
-		calc_num(program[i]);
-	}
+	execute();
 	return 0;
 }

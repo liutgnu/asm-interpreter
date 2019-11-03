@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+typedef enum {false, true} bool;
+
 extern int yylex();
 static int yyparse();
 extern FILE *yyin;
@@ -9,6 +11,11 @@ static int yyerror(const char *s);
 static int reg_name_to_index(const char);
 static double res;
 static double regs_table[52] = {0,};
+extern int convert_label_to_line(const char *);
+
+extern int PC;
+extern bool FLAGS;
+
 %}
 %union {
 	double d;
@@ -64,6 +71,26 @@ instruction: OPCODE exp EOL {
 		regs_table[reg_name_to_index($3)] = $5;
 	}
 }
+|OPCODE LABL EOL {
+	int tmp;
+	if (!strcmp($1, "jmp")) {
+		if ((tmp = convert_label_to_line($2)) < 0) {
+			printf("Wrong jump label %s\n", $2);
+			exit(-1);
+		}
+		PC = tmp;
+	}
+	if (!strcmp($1, "je")) {
+		if (tmp = convert_label_to_line($2) < 0) {
+			printf("Wrong jump label %s\n", $2);
+			exit(-1);
+		}
+		if (FLAGS == true) {
+			PC = tmp;
+			FLAGS = false;
+		}
+	}
+}
 |EOL {}
 |LABL EOL {}
 
@@ -104,7 +131,7 @@ static int reg_name_to_index(const char name)
 	if (name >= 'a' && name <= 'z')
 		return name - 'a';
 	if (name >= 'A' && name <= 'Z')
-		return name - 'A';
+		return name - 'A' + 26;
 	printf("reg name error!\n");
 	exit(-1);
 }
@@ -126,12 +153,12 @@ void init_regs(void)
 	}
 }
 
-void calc_num(const char *expression)
+void do_execute(const char *instruction)
 {
-	if (!expression) {
+	if (!instruction) {
 		goto out;
 	}
-	yyin = fmemopen(expression, strlen(expression)+1, "r");
+	yyin = fmemopen(instruction, strlen(instruction) + 1, "r");
 	if (yyparse()) {
 		printf("parse error!\n");
 		goto out;
