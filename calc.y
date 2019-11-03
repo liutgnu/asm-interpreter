@@ -59,6 +59,7 @@ instruction: OPCODE exp EOL {
 		regs_table[reg_name_to_index($3)] = $5;
 	}
 }
+|EOL {}
 |LABL EOL {}
 
 /*calculation related*/
@@ -116,20 +117,23 @@ void init_regs(void)
 {
 	int i;
 	for (i = 0; i < 52; i++){
-		regs_table[i] = 3;
+		regs_table[i] = 0;
 	}
 }
 
-double calc_num(const char *expression)
+void calc_num(const char *expression)
 {
+	if (!expression) {
+		goto out;
+	}
 	yyin = fmemopen(expression, strlen(expression)+1, "r");
 	if (yyparse()) {
 		printf("parse error!\n");
 		goto out;
 	}
-	fclose(yyin);
-	return res;
 out:
-	fclose(yyin);
-	exit(-1);
+	if (yyin) {
+		fclose(yyin);
+		yyin = NULL;
+	}
 }
