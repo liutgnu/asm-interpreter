@@ -41,27 +41,22 @@ extern bool FLAGS;
 %right MUL DIV
 
 %%
-instruction: OPCODE exp EOL {
+perline: LABL instruction EOL {}
+| instruction EOL {}
+| LABL EOL {}
+| EOL {}
+
+instruction: OPCODE exp {
 	if (!strcmp($1, "print")) {
 		printf("=%lf\n", $2);
 	}	   
 }
-| LABL OPCODE exp EOL {
-	if (!strcmp($2, "print")) {
-		printf("=%lf\n", $3);
-	}	
-}
-| OPCODE STR EOL {
+| OPCODE STR {
 	if (!strcmp($1, "print")) {
 		printf("=%s\n", $2);
 	}
 }
-| LABL OPCODE STR EOL {
-	if (!strcmp($2, "print")) {
-		printf("=%s\n", $3);
-	}
-}
-|OPCODE REG COMA exp EOL {
+| OPCODE REG COMA exp {
 	if (!strcmp($1, "mov")) {
 		regs_table[reg_name_to_index($2)] = $4;
 	}
@@ -73,12 +68,7 @@ instruction: OPCODE exp EOL {
 		}
 	}
 }
-|LABL OPCODE REG COMA exp EOL {
-	if (!strcmp($2, "mov")) {
-		regs_table[reg_name_to_index($3)] = $5;
-	}
-}
-|OPCODE LABL EOL {
+| OPCODE LABL {
 	int tmp;
 	if (!strcmp($1, "jmp")) {
 		if ((tmp = convert_label_to_line($2)) < 0) {
@@ -98,8 +88,6 @@ instruction: OPCODE exp EOL {
 		}
 	}
 }
-|EOL {}
-|LABL EOL {}
 
 /*calculation related*/
 
@@ -149,7 +137,6 @@ static int yyerror(char const *str)
 	fprintf(stderr, "parse error in %x\n", *yytext);
 	return 0;
 }
-
 
 /****************export func********************/
 void init_regs(void)
