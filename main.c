@@ -65,7 +65,7 @@ static int parse_file(const char *file_name)
 		if (*file_scan_end == '"') {
 			in_quot = !in_quot;
 		}
-		if (*file_scan_end == ':' && !in_quot) {
+		if (*file_scan_end == ':' && !in_quot) { 
 			label_num++;
 		}
 		if (*file_scan_end == '\n' && !in_quot) {
@@ -105,7 +105,8 @@ static int parse_file(const char *file_name)
 			continue;
 		}
 		/*now process label of this line, return error if label repets*/
-		if (!in_quot && *file_scan_end == ':') {
+		if (!in_quot && *file_scan_end == ':' && (!memchr(file_scan_start, ' ', file_scan_end - file_scan_start)
+					&& !memchr(file_scan_start, '\t', file_scan_end - file_scan_start))) {
 			labels[i].label = strndup(file_scan_start, file_scan_end - file_scan_start);
 			labels[i].line = index;
 			for (j = 0; j < i; j++) {

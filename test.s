@@ -11,4 +11,5 @@ mov z,z-1
 cmp z,0
 je end:
 jmp loop:
+je end:
 end:
