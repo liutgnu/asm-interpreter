@@ -1,15 +1,18 @@
-mov x,1
-mov y,1
-mov z,5
-print x
-print y
-loop: mov x,x+y
-print x
-mov y,x+y
-print y
-mov z,z-1
-cmp z,0
+mov z, 10
+mov y, 1
+outerLoop:
+mov x, 0
+cmp y, z
+je outerEnd:
+innerLoop:
+cmp x, y
+je innerFini:
+print "*"
+mov x, x+1
+jmp innerLoop:
+innerFini:
+print "\n"
+mov y, y+1
+jmp outerLoop:
+outerEnd:
 halt
-je end:
-jmp loop:
-end:

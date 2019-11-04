@@ -48,12 +48,12 @@ perline: LABL instruction EOL {}
 
 instruction: OPCODE exp {
 	if (!strcmp($1, "print")) {
-		printf("=%lf\n", $2);
+		printf("%lf", $2);
 	}	   
 }
 | OPCODE STR {
 	if (!strcmp($1, "print")) {
-		printf("=%s\n", $2);
+		printf("%s", $2);
 	}
 }
 | OPCODE REG COMA exp {
