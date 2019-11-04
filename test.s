@@ -9,7 +9,7 @@ mov y,x+y
 print y
 mov z,z-1
 cmp z,0
+halt
 je end:
 jmp loop:
-je end:
 end:

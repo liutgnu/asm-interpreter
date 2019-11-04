@@ -88,6 +88,11 @@ instruction: OPCODE exp {
 		}
 	}
 }
+| OPCODE {
+	if (!strcmp($1, "halt")) {
+		exit(0);
+	}
+}
 
 /*calculation related*/
 
