@@ -8,6 +8,7 @@ print {yylval.opcode = "print"; return OPCODE;}
 mov {yylval.opcode = "mov"; return OPCODE;}
 je {yylval.opcode = "je"; return OPCODE;}
 jmp {yylval.opcode = "jmp"; return OPCODE;}
+cmp {yylval.opcode = "cmp"; return OPCODE;}
 [^ \t\s]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
 [0-9]*\.?[0-9]+ {yylval.d = atof(yytext); return NUM;}
 "+" {return ADD;}

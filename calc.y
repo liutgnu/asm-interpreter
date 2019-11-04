@@ -65,6 +65,13 @@ instruction: OPCODE exp EOL {
 	if (!strcmp($1, "mov")) {
 		regs_table[reg_name_to_index($2)] = $4;
 	}
+	if (!strcmp($1, "cmp")) {
+		if (!(regs_table[reg_name_to_index($2)] - $4)) {
+			FLAGS = true;
+		} else {
+			FLAGS = false;
+		}
+	}
 }
 |LABL OPCODE REG COMA exp EOL {
 	if (!strcmp($2, "mov")) {
@@ -81,7 +88,7 @@ instruction: OPCODE exp EOL {
 		PC = tmp;
 	}
 	if (!strcmp($1, "je")) {
-		if (tmp = convert_label_to_line($2) < 0) {
+		if ((tmp = convert_label_to_line($2)) < 0) {
 			printf("Wrong jump label %s\n", $2);
 			exit(-1);
 		}

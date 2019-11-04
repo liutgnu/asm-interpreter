@@ -28,7 +28,6 @@ int convert_label_to_line(const char *label)
 	int i;
 	if (!labels)
 		goto out;
-
 	for (i = 0; i < label_num; i++) {
 		if (!strcmp(label, labels[i].label))
 			return labels[i].line;
@@ -123,10 +122,6 @@ static int parse_file(const char *file_name)
 		file_scan_end++;
 	}
 	free(file_cache);
-	for (int j = 0; j<label_num;j++) {
-		printf("label:\"%s\", %d\n", labels[j].label, labels[j].line);
-	}
-
 	return 0;
 
 out:
@@ -157,21 +152,13 @@ out:
 
 void execute(void)
 {
-	while(PC < line_num)
-		do_execute(program[PC++]);	
+	while(PC < line_num) {
+		do_execute(program[PC++]);
+	}
 }
 
 int main(int argc, char **argv)
 {
-/*
-	init_regs();
-	const char *exp[] = {"mov x,117.123","label:mov y,3","loop:","print \"hello world\"", "print x + y"};
-	int i;
-	for (i = 0; i < 5; i++) {
-		calc_num(exp[i]);
-	}
-	return 0;
-*/
 	if (argc != 2) {
 		printf("Useage: ./a.out <script_file>\n");
 		return -1;
