@@ -32,7 +32,8 @@ je {yylval.opcode = "je"; return OPCODE;}
 jmp {yylval.opcode = "jmp"; return OPCODE;}
 cmp {yylval.opcode = "cmp"; return OPCODE;}
 halt {yylval.opcode = "halt"; return OPCODE;}
-[^ \t\s]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
+ /* \s is not supported*/
+[^ \t\r\v\f]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
 [0-9]*\.?[0-9]+ {yylval.d = atof(yytext); return NUM;}
 "+" {return ADD;}
 "-" {return SUB;}

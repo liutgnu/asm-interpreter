@@ -139,7 +139,7 @@ static int reg_name_to_index(const char name)
 static int yyerror(char const *str)
 {
 	extern char *yytext;
-	fprintf(stderr, "parse error in %x\n", *yytext);
+	fprintf(stderr, "parse error in %x, %c\n", *yytext, *yytext);
 	return 0;
 }
 

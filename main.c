@@ -29,7 +29,7 @@ int convert_label_to_line(const char *label)
 	if (!labels)
 		goto out;
 	for (i = 0; i < label_num; i++) {
-		if (!strcmp(label, labels[i].label))
+		if (labels[i].label && !strcmp(label, labels[i].label))
 			return labels[i].line;
 	}
 out:

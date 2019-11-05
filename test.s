@@ -6,11 +6,11 @@ cmp y, z
 je outerEnd:
 innerLoop:
 cmp x, y
-je innerFini:
+je innerFinish:
 print "*"
 mov x, x+1
 jmp innerLoop:
-innerFini:
+innerFinish:
 print "\n"
 mov y, y+1
 jmp outerLoop:
