@@ -1,6 +1,6 @@
-calc:
-		bison -d calc.y
-		flex -o calc.yy.c calc.l
-		gcc -g calc.tab.c calc.yy.c stack.c main.c
+all:
+		bison -d interpreter.y
+		flex -o interpreter.yy.c interpreter.l
+		gcc -g interpreter.tab.c interpreter.yy.c stack.c main.c
 clean:
-		rm -f a.out *.h calc.tab.c calc.yy.c
+		rm -f a.out *.h interpreter.tab.c interpreter.yy.c

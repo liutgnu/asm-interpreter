@@ -1,6 +1,6 @@
 %option noyywrap
 %{
-#include "calc.tab.h"
+#include "interpreter.tab.h"
 %}
 %%
 \"[^\f\v\n\0]*\" {
