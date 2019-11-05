@@ -32,6 +32,8 @@ je {yylval.opcode = "je"; return OPCODE;}
 jmp {yylval.opcode = "jmp"; return OPCODE;}
 cmp {yylval.opcode = "cmp"; return OPCODE;}
 halt {yylval.opcode = "halt"; return OPCODE;}
+call {yylval.opcode = "call"; return OPCODE;}
+ret {yylval.opcode = "ret"; return OPCODE;}
  /* \s is not supported*/
 [^ \t\r\v\f]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
 [0-9]*\.?[0-9]+ {yylval.d = atof(yytext); return NUM;}

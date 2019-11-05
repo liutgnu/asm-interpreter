@@ -12,6 +12,8 @@ static int reg_name_to_index(const char);
 static double res;
 static double regs_table[52] = {0,};
 extern int convert_label_to_line(const char *);
+extern void push_address(int);
+extern int pop_address(void);
 
 extern int PC;
 extern bool FLAGS;
@@ -69,28 +71,31 @@ instruction: OPCODE exp {
 	}
 }
 | OPCODE LABL {
-	int tmp;
+	int tmp = convert_label_to_line($2);
+	if (tmp < 0) {
+		printf("Wrong label %s\n", $2);
+		exit(-1);
+	}
 	if (!strcmp($1, "jmp")) {
-		if ((tmp = convert_label_to_line($2)) < 0) {
-			printf("Wrong jump label %s\n", $2);
-			exit(-1);
-		}
 		PC = tmp;
 	}
 	if (!strcmp($1, "je")) {
-		if ((tmp = convert_label_to_line($2)) < 0) {
-			printf("Wrong jump label %s\n", $2);
-			exit(-1);
-		}
 		if (FLAGS == true) {
 			PC = tmp;
 			FLAGS = false;
 		}
 	}
+	if (!strcmp($1, "call")) {
+		push_address(PC);
+		PC = tmp;
+	}
 }
 | OPCODE {
 	if (!strcmp($1, "halt")) {
 		exit(0);
+	}
+	if (!strcmp($1, "ret")) {
+		PC = pop_address();
 	}
 }
 
