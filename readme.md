@@ -1,5 +1,9 @@
 # Overview #
----
+
+## Update ##
+
+I have rewritten the entire project with flex and bison, which is more flexible and extensive. The original version can be found in master branch.
+
 ## Introduction ##
 
 The interpreter can interpret and run assembly-like language script. It supports 8 instructions:
@@ -26,7 +30,7 @@ The interpreter contains an arithmetic calculator, so there is no need to bring 
 	mov x,x+y                        means move the sum of x+y to x
 	mov x,(x+y)*(x-4)
 	print "hello,world"              prints string hello,world
-	call func1                       call a new function func1
+	call func1:                      call a new function func1
 	ret                              return from a function
 
 ## To use: ##
@@ -35,15 +39,42 @@ The interpreter contains an arithmetic calculator, so there is no need to bring 
 - program the assembly-like language in a file, test.s for example.
 - run the program by type the following commmand in terminal
 
-	$ ./interpreter test.s
+	$ ./a.out test.s
 
 - voilà, that's it!
+- *.s files are samples of assembly-like program.
 
 ## The purpose of assembly-like language interpreter ##
 
 - tool to learn assembly language programming for newbies
 - have fun programming anywhere by cross-compile it to Android phones
 
-## NOTE: ##
-This interpreter doesn't support floating-point arithmetics such as "mov x,3.14", or code comment.
-Be ware!
+## The output of sample program ##
+
+$ ./a.out loop_branch_test.s
+
+```
+*
+**
+***
+****
+*****
+******
+*******
+********
+*********
+```
+
+$ ./a.out function_call_test.s
+```
+hello
+in func1
+in func2
+in func3
+world
+```
+$ ./a.out calculation_test.s
+```
+395.640000
+```
+
