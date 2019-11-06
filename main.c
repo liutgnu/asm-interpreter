@@ -36,6 +36,27 @@ out:
 	return -1;
 }
 
+void free_resources(void)
+{
+	int i;
+	if (program) {
+		for (i = 0; i < line_num; i++) {
+			if (program[i])
+				free(program[i]);
+		}
+		free(program);
+		program = NULL;
+	}
+	if (labels) {
+		for (i = 0; i < label_num; i++) {
+			if (labels[i].label)
+				free(labels[i].label);
+		}
+		free(labels);
+		labels = NULL;
+	}
+}
+
 static int parse_file(const char *file_name)
 {
 	int fd = 0, index = 0, i = 0, j = 0;
@@ -128,22 +149,7 @@ static int parse_file(const char *file_name)
 out:
 	if (fd)
 		close(fd);
-	if (program) {
-		for (i = 0; i < line_num; i++) {
-			if (program[i])
-				free(program[i]);
-		}
-		free(program);
-		program = NULL;
-	}
-	if (labels) {
-		for (i = 0; i < label_num; i++) {
-			if (labels[i].label)
-				free(labels[i].label);
-		}
-		free(labels);
-		labels = NULL;
-	}
+	free_resources();
 	if (file_cache) {
 		free(file_cache);
 		file_cache = NULL;

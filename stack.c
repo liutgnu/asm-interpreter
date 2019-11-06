@@ -8,7 +8,7 @@ typedef struct node {
 	struct node *prev;
 	struct node *next;
 } node;
-
+extern void free_resources(void);
 node *stack = NULL;
 
 void stack_push(node *new_node)
@@ -49,6 +49,7 @@ void push_address(int PC)
 	node *new_node = malloc(sizeof(node));
 	if (!new_node) {
 		printf("malloc call func error!\n");
+		free_resources();
 		exit(-1);
 	}
 	memset(new_node, 0, sizeof(node));
@@ -62,6 +63,7 @@ int pop_address(void)
 	node *node = stack_pop();
 	if (!node) {
 		printf("stack empty!\n");
+		free_resources();
 		exit(-1);
 	}
 	PC = node->pc;

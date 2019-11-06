@@ -14,6 +14,7 @@ static double regs_table[52] = {0,};
 extern int convert_label_to_line(const char *);
 extern void push_address(int);
 extern int pop_address(void);
+extern void free_resources(void);
 
 extern int PC;
 extern bool FLAGS;
@@ -43,9 +44,13 @@ extern bool FLAGS;
 %right MUL DIV
 
 %%
-perline: LABL instruction EOL {}
+perline: LABL instruction EOL {
+	free($1);
+}
 | instruction EOL {}
-| LABL EOL {}
+| LABL EOL {
+	free($1);
+}
 | EOL {}
 
 instruction: OPCODE exp {
@@ -57,6 +62,7 @@ instruction: OPCODE exp {
 	if (!strcmp($1, "print")) {
 		printf("%s", $2);
 	}
+	free($2);
 }
 | OPCODE REG COMA exp {
 	if (!strcmp($1, "mov")) {
@@ -74,6 +80,8 @@ instruction: OPCODE exp {
 	int tmp = convert_label_to_line($2);
 	if (tmp < 0) {
 		printf("Wrong label %s\n", $2);
+		free($2);
+		free_resources();
 		exit(-1);
 	}
 	if (!strcmp($1, "jmp")) {
@@ -89,9 +97,11 @@ instruction: OPCODE exp {
 		push_address(PC);
 		PC = tmp;
 	}
+	free($2);
 }
 | OPCODE {
 	if (!strcmp($1, "halt")) {
+		free_resources();
 		exit(0);
 	}
 	if (!strcmp($1, "ret")) {
@@ -138,6 +148,7 @@ static int reg_name_to_index(const char name)
 	if (name >= 'A' && name <= 'Z')
 		return name - 'A' + 26;
 	printf("reg name error!\n");
+	free_resources();
 	exit(-1);
 }
 
