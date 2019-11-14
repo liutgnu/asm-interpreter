@@ -74,6 +74,9 @@ instruction: OPCODE exp {
 		free_resources();
 		exit(-1);
 	}
+	/*
+	 * jump on flags refer to http://www.unixwiz.net/techtips/x86-jumps.html
+	*/
 	if (!strcmp($1, "jmp")) {
 		r_eip = tmp;
 	}
