@@ -5,15 +5,13 @@
 #include<string.h>
 #include<sys/types.h>
 #include<sys/stat.h>
+#include"cpu.h"
 
 typedef enum {false = 0, true} bool;
 typedef struct label_to_line {
 	int line;
 	char *label;
 } label_to_line;
-
-int PC = 0;
-bool FLAGS = false;
 
 extern void do_execute(const char *);
 extern void init_regs(void);
@@ -159,8 +157,8 @@ out:
 
 void execute(void)
 {
-	while(PC < line_num) {
-		do_execute(program[PC++]);
+	while(r_eip < line_num) {
+		do_execute(program[r_eip++]);
 	}
 }
 

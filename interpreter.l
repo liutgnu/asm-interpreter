@@ -29,6 +29,11 @@
 print {yylval.opcode = "print"; return OPCODE;}
 mov {yylval.opcode = "mov"; return OPCODE;}
 je {yylval.opcode = "je"; return OPCODE;}
+jl {yylval.opcode = "jl"; return OPCODE;}
+jle {yylval.opcode = "jle"; return OPCODE;}
+jg {yylval.opcode = "jg"; return OPCODE;}
+jge {yylval.opcode = "jge"; return OPCODE;}
+jz {yylval.opcode = "jz"; return OPCODE;}
 jmp {yylval.opcode = "jmp"; return OPCODE;}
 cmp {yylval.opcode = "cmp"; return OPCODE;}
 halt {yylval.opcode = "halt"; return OPCODE;}
@@ -36,7 +41,7 @@ call {yylval.opcode = "call"; return OPCODE;}
 ret {yylval.opcode = "ret"; return OPCODE;}
  /* \s is not supported*/
 [^ \t\r\v\f]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
-[0-9]*\.?[0-9]+ {yylval.d = atof(yytext); return NUM;}
+[0-9]+ {yylval.d = (unsigned long)atol(yytext); return NUM;}
 "+" {return ADD;}
 "-" {return SUB;}
 "*" {return MUL;}

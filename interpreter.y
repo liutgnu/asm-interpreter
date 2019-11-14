@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "cpu.h"
+#include "stack.h"
 typedef enum {false, true} bool;
 
 extern int yylex();
@@ -9,19 +11,11 @@ static int yyparse();
 extern FILE *yyin;
 static int yyerror(const char *s);
 static int reg_name_to_index(const char);
-static double res;
-static double regs_table[52] = {0,};
 extern int convert_label_to_line(const char *);
-extern void push_address(int);
-extern int pop_address(void);
 extern void free_resources(void);
-
-extern int PC;
-extern bool FLAGS;
-
 %}
 %union {
-	double d;
+	unsigned long d;
 	char reg;
 	char *opcode;
 	char *word;
@@ -55,7 +49,7 @@ perline: LABL instruction EOL {
 
 instruction: OPCODE exp {
 	if (!strcmp($1, "print")) {
-		printf("%lf", $2);
+		printf("%ld", $2);
 	}	   
 }
 | OPCODE STR {
@@ -69,11 +63,7 @@ instruction: OPCODE exp {
 		regs_table[reg_name_to_index($2)] = $4;
 	}
 	if (!strcmp($1, "cmp")) {
-		if (!(regs_table[reg_name_to_index($2)] - $4)) {
-			FLAGS = true;
-		} else {
-			FLAGS = false;
-		}
+		cmp_set_flags(regs_table[reg_name_to_index($2)], $4);
 	}
 }
 | OPCODE LABL {
@@ -85,17 +75,36 @@ instruction: OPCODE exp {
 		exit(-1);
 	}
 	if (!strcmp($1, "jmp")) {
-		PC = tmp;
+		r_eip = tmp;
 	}
-	if (!strcmp($1, "je")) {
-		if (FLAGS == true) {
-			PC = tmp;
-			FLAGS = false;
+	if (!strcmp($1, "je") || !strcmp($1, "jz")) {
+		if (GET_FLAG(ZF)) {
+			r_eip = tmp;
+		}
+	}
+	if (!strcmp($1, "jl")) {
+		if (GET_FLAG(SF) != GET_FLAG(OF)) {
+			r_eip = tmp;
+		}
+	}
+	if (!strcmp($1, "jle")) {
+		if (GET_FLAG(ZF) || (GET_FLAG(SF) != GET_FLAG(OF))) {
+			r_eip = tmp;
+		}
+	}
+	if (!strcmp($1, "jg")) {
+		if (!GET_FLAG(ZF) && (GET_FLAG(SF) == GET_FLAG(OF))) {
+			r_eip = tmp;
+		}
+	}
+	if (!strcmp($1, "jge")) {
+		if (GET_FLAG(SF) == GET_FLAG(OF)) {
+			r_eip = tmp;
 		}
 	}
 	if (!strcmp($1, "call")) {
-		push_address(PC);
-		PC = tmp;
+		push_address(r_eip);
+		r_eip = tmp;
 	}
 	free($2);
 }
@@ -105,7 +114,7 @@ instruction: OPCODE exp {
 		exit(0);
 	}
 	if (!strcmp($1, "ret")) {
-		PC = pop_address();
+		r_eip = pop_address();
 	}
 }
 
@@ -166,6 +175,8 @@ void init_regs(void)
 	for (i = 0; i < 52; i++){
 		regs_table[i] = 0;
 	}
+	r_eflags = 0;
+	r_eip = 0;
 }
 
 void do_execute(const char *instruction)

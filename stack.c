@@ -2,9 +2,9 @@
 #include<unistd.h>
 #include<string.h>
 #include<stdlib.h>
-
+#include"stack.h"
 typedef struct node {
-	int pc;
+	unsigned long pc;
 	struct node *prev;
 	struct node *next;
 } node;
@@ -44,7 +44,7 @@ node *stack_pop(void) {
 	}
 }
 
-void push_address(int PC)
+void push_address(unsigned long PC)
 {
 	node *new_node = malloc(sizeof(node));
 	if (!new_node) {
@@ -57,9 +57,9 @@ void push_address(int PC)
 	stack_push(new_node); 
 }
 
-int pop_address(void)
+unsigned long pop_address(void)
 {
-	int PC;
+	unsigned long PC;
 	node *node = stack_pop();
 	if (!node) {
 		printf("stack empty!\n");
