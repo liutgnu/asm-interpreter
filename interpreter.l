@@ -39,9 +39,19 @@ cmp {yylval.opcode = "cmp"; return OPCODE;}
 halt {yylval.opcode = "halt"; return OPCODE;}
 call {yylval.opcode = "call"; return OPCODE;}
 ret {yylval.opcode = "ret"; return OPCODE;}
+
+[re]?ax {yylval.reg = strdup(yytext); return REG;}
+[re]?bx {yylval.reg = strdup(yytext); return REG;}
+[re]?cx {yylval.reg = strdup(yytext); return REG;}
+[re]?dx {yylval.reg = strdup(yytext); return REG;}
+[re]si {yylval.reg = strdup(yytext); return REG;}
+[re]di {yylval.reg = strdup(yytext); return REG;}
+[re]sp {yylval.reg = strdup(yytext); return REG;}
+[re]bp {yylval.reg = strdup(yytext); return REG;}
+
  /* \s is not supported*/
 [^ \t\r\v\f]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
-[0-9]+ {yylval.d = (unsigned long)atol(yytext); return NUM;}
+[0-9]+ {yylval.d = (unsigned long long)atoll(yytext); return NUM;}
 "+" {return ADD;}
 "-" {return SUB;}
 "*" {return MUL;}
@@ -52,6 +62,6 @@ ret {yylval.opcode = "ret"; return OPCODE;}
 "," {return COMA;}
 [\0\n] {return EOL;}
 [ \t] {}
-[a-zA-Z] {yylval.reg = *yytext; return REG;}
 . {printf("unsupported char %x\n", (char)*yytext);}
 %%
+

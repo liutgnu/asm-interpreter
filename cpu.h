@@ -17,9 +17,17 @@
 
 #define GET_SIGN(x) (x >> 31)
 
-extern unsigned long r_eflags;
-extern unsigned long r_eip;
-extern unsigned long regs_table[52];
+#define GET_64(x) (*(x))
+#define GET_32(x) ((*(x)) & 0xffffffff)
+#define GET_16(x) ((*(x)) & 0xffff)
+#define SET_64(x, v) {(*(x)) = (unsigned long long)v;}
+#define SET_32(x, v) {(*(x)) = ((*(x)) & (~0xffffffff)) + (unsigned long)v;}
+#define SET_16(x, v) {(*(x)) = ((*(x)) & (~0xffff)) + (unsigned short)v;}
 
-extern void cmp_set_flags(unsigned long, unsigned long);
+extern unsigned long r_eflags;
+extern unsigned long long regs_table[9];
+extern void set_reg_value(const char *, unsigned long long);
+extern unsigned long long get_reg_value(const char *);
+extern void cmp_set_flags(unsigned long long, unsigned long long);
+extern void init_regs(void);
 #endif

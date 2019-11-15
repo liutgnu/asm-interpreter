@@ -1,17 +1,17 @@
-        mov    y, 1
+        mov    ebx, 1
         jmp     .L2:
 .L5:
-        mov    x, 0
+        mov    eax, 0
         jmp     .L3:
 .L4:
         print "*"
-        mov    x, x+1
+        mov    eax, eax+1
 .L3:
-	cmp x, y
+	cmp eax, ebx
         jl      .L4:
 	print "\n"
-	mov y, y+1
+	mov ebx, ebx+1
 .L2:
-        cmp    y, 10
+        cmp    ebx, 10
         jle     .L5:
 	halt

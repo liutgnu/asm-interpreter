@@ -14,7 +14,6 @@ typedef struct label_to_line {
 } label_to_line;
 
 extern void do_execute(const char *);
-extern void init_regs(void);
 static int line_num = 0;
 static char **program = NULL;
 
@@ -157,8 +156,10 @@ out:
 
 void execute(void)
 {
-	while(r_eip < line_num) {
-		do_execute(program[r_eip++]);
+	unsigned long long rip;
+	while ((rip = get_reg_value("rip")) < line_num) {
+		do_execute(program[rip]);
+		set_reg_value("rip", get_reg_value("rip") + 1);
 	}
 }
 

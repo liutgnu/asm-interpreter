@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include"stack.h"
 typedef struct node {
-	unsigned long pc;
+	unsigned long long value;
 	struct node *prev;
 	struct node *next;
 } node;
@@ -44,7 +44,7 @@ node *stack_pop(void) {
 	}
 }
 
-void push_address(unsigned long PC)
+void push_address(unsigned long long value)
 {
 	node *new_node = malloc(sizeof(node));
 	if (!new_node) {
@@ -53,20 +53,20 @@ void push_address(unsigned long PC)
 		exit(-1);
 	}
 	memset(new_node, 0, sizeof(node));
-	new_node->pc = PC;
+	new_node->value = value;
 	stack_push(new_node); 
 }
 
-unsigned long pop_address(void)
+unsigned long long pop_address(void)
 {
-	unsigned long PC;
+	unsigned long long value;
 	node *node = stack_pop();
 	if (!node) {
 		printf("stack empty!\n");
 		free_resources();
 		exit(-1);
 	}
-	PC = node->pc;
+	value = node->value;
 	free(node);
-	return PC;
+	return value;
 }
