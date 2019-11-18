@@ -39,6 +39,8 @@ cmp {yylval.opcode = "cmp"; return OPCODE;}
 halt {yylval.opcode = "halt"; return OPCODE;}
 call {yylval.opcode = "call"; return OPCODE;}
 ret {yylval.opcode = "ret"; return OPCODE;}
+push {yylval.opcode = "push"; return OPCODE;}
+pop {yylval.opcode = "pop"; return OPCODE;}
 
 [re]?ax {yylval.reg = strdup(yytext); return REG;}
 [re]?bx {yylval.reg = strdup(yytext); return REG;}

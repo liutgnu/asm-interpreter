@@ -111,8 +111,20 @@ instruction: OPCODE exp {
 		}
 	}
 	if (!strcmp($1, "call")) {
-		push_address(get_reg_value("rip"));
+		stack_push("rip");
 		set_reg_value("rip", (unsigned long long)tmp);
+	}
+	free($2);
+}
+| OPCODE REG {
+	if (!strcmp($1, "push")) {
+		stack_push($2);
+	}
+	if (!strcmp($1, "pop")) {
+		stack_pop($2);
+	}
+	if (!strcmp($1, "print")) {
+		printf("%llu", get_reg_value($2));
 	}
 	free($2);
 }
@@ -122,7 +134,7 @@ instruction: OPCODE exp {
 		exit(0);
 	}
 	if (!strcmp($1, "ret")) {
-		set_reg_value("rip", pop_address());
+		stack_pop("rip");
 	}
 }
 

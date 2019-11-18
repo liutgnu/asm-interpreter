@@ -6,6 +6,7 @@
 #include<sys/types.h>
 #include<sys/stat.h>
 #include"cpu.h"
+#include"stack.h"
 
 typedef enum {false = 0, true} bool;
 typedef struct label_to_line {
@@ -173,6 +174,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	init_regs();
+	init_stack();
 	execute();
 	return 0;
 }
