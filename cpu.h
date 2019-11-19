@@ -1,5 +1,6 @@
 #ifndef _CPU_H_
 #define _CPU_H_
+#include <stdint.h>
 
 #define CF (1 << 0)
 #define PF (1 << 2)
@@ -20,14 +21,14 @@
 #define GET_64(x) (*(x))
 #define GET_32(x) ((*(x)) & 0xffffffff)
 #define GET_16(x) ((*(x)) & 0xffff)
-#define SET_64(x, v) {(*(x)) = (unsigned long long)v;}
-#define SET_32(x, v) {(*(x)) = ((*(x)) & (~0xffffffff)) + (unsigned long)v;}
-#define SET_16(x, v) {(*(x)) = ((*(x)) & (~0xffff)) + (unsigned short)v;}
+#define SET_64(x, v) {(*(x)) = (uint64_t)v;}
+#define SET_32(x, v) {(*(x)) = ((*(x)) & (~0xffffffff)) + (uint32_t)v;}
+#define SET_16(x, v) {(*(x)) = ((*(x)) & (~0xffff)) + (uint16_t)v;}
 
-extern unsigned long r_eflags;
-extern unsigned long long regs_table[9];
-extern void set_reg_value(const char *, unsigned long long);
-extern unsigned long long get_reg_value(const char *);
-extern void cmp_set_flags(unsigned long long, unsigned long long);
+extern uint32_t r_eflags;
+extern uint64_t regs_table[9];
+extern void set_reg_value(const char *, uint64_t);
+extern uint64_t get_reg_value(const char *);
+extern void cmp_set_flags(uint64_t, uint64_t);
 extern void init_regs(void);
 #endif

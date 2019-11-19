@@ -5,6 +5,7 @@
 #include<string.h>
 #include<sys/types.h>
 #include<sys/stat.h>
+#include<stdint.h>
 #include"cpu.h"
 #include"stack.h"
 
@@ -157,7 +158,7 @@ out:
 
 void execute(void)
 {
-	unsigned long long rip;
+	uint64_t rip;
 	while ((rip = get_reg_value("rip")) < line_num) {
 		do_execute(program[rip]);
 		set_reg_value("rip", get_reg_value("rip") + 1);

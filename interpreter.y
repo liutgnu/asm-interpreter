@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include "cpu.h"
 #include "stack.h"
 typedef enum {false, true} bool;
@@ -15,7 +16,7 @@ extern int convert_label_to_line(const char *);
 extern void free_resources(void);
 %}
 %union {
-	unsigned long long d;
+	uint64_t d;
 	char *reg;
 	char *opcode;
 	char *word;
@@ -49,7 +50,7 @@ perline: LABL instruction EOL {
 
 instruction: OPCODE exp {
 	if (!strcmp($1, "print")) {
-		printf("%llu", $2);
+		printf("%lu", $2);
 	}	   
 }
 | OPCODE STR {
@@ -79,40 +80,40 @@ instruction: OPCODE exp {
 	 * jump on flags refer to http://www.unixwiz.net/techtips/x86-jumps.html
 	*/
 	if (!strcmp($1, "jmp")) {
-		set_reg_value("rip", (unsigned long long)tmp);
+		set_reg_value("rip", (uint64_t)tmp);
 	}
 	if (!strcmp($1, "je") || !strcmp($1, "jz")) {
 		if (GET_FLAG(ZF)) {
-			set_reg_value("rip", (unsigned long long)tmp);	
+			set_reg_value("rip", (uint64_t)tmp);	
 		}
 	}
 	if (!strcmp($1, "jl")) {
 		if (GET_FLAG(SF) != GET_FLAG(OF)) {
-			set_reg_value("rip", (unsigned long long)tmp);
+			set_reg_value("rip", (uint64_t)tmp);
 
 		}
 	}
 	if (!strcmp($1, "jle")) {
 		if (GET_FLAG(ZF) || (GET_FLAG(SF) != GET_FLAG(OF))) {
-			set_reg_value("rip", (unsigned long long)tmp);
+			set_reg_value("rip", (uint64_t)tmp);
 
 		}
 	}
 	if (!strcmp($1, "jg")) {
 		if (!GET_FLAG(ZF) && (GET_FLAG(SF) == GET_FLAG(OF))) {
-			set_reg_value("rip", (unsigned long long)tmp);
+			set_reg_value("rip", (uint64_t)tmp);
 
 		}
 	}
 	if (!strcmp($1, "jge")) {
 		if (GET_FLAG(SF) == GET_FLAG(OF)) {
-			set_reg_value("rip", (unsigned long long)tmp);
+			set_reg_value("rip", (uint64_t)tmp);
 
 		}
 	}
 	if (!strcmp($1, "call")) {
 		stack_push("rip");
-		set_reg_value("rip", (unsigned long long)tmp);
+		set_reg_value("rip", (uint64_t)tmp);
 	}
 	free($2);
 }
@@ -124,7 +125,7 @@ instruction: OPCODE exp {
 		stack_pop($2);
 	}
 	if (!strcmp($1, "print")) {
-		printf("%llu", get_reg_value($2));
+		printf("%lu", get_reg_value($2));
 	}
 	free($2);
 }

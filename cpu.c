@@ -2,19 +2,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
-unsigned long long regs_table[9];
+uint64_t regs_table[9];
 /*Don't change order!!!*/
-//unsigned long long r_rax;
-//unsigned long long r_rbx;
-//unsigned long long r_rcx;
-//unsigned long long r_rdx;
-//unsigned long long r_rsi;
-//unsigned long long r_rdi;
-//unsigned long long r_rsp;
-//unsigned long long r_rbp;
-//unsigned long long r_rip;
-unsigned long r_eflags;
+//uint64_t r_rax;
+//uint64_t r_rbx;
+//uint64_t r_rcx;
+//uint64_t r_rdx;
+//uint64_t r_rsi;
+//uint64_t r_rdi;
+//uint64_t r_rsp;
+//uint64_t r_rbp;
+//uint64_t r_rip;
+uint32_t r_eflags;
 
 void init_regs(void)
 {
@@ -48,7 +49,7 @@ out:
 	exit(-1);
 }
 
-void set_reg_value(const char *reg, unsigned long long v)
+void set_reg_value(const char *reg, uint64_t v)
 {
 	int index = get_reg_index(reg);
 
@@ -59,7 +60,7 @@ void set_reg_value(const char *reg, unsigned long long v)
 	}
 }
 
-unsigned long long get_reg_value(const char *reg)
+uint64_t get_reg_value(const char *reg)
 {
 	int index = get_reg_index(reg);
 
@@ -70,9 +71,9 @@ unsigned long long get_reg_value(const char *reg)
 	}
 }
 
-void cmp_set_flags(unsigned long long l, unsigned long long r)
+void cmp_set_flags(uint64_t l, uint64_t r)
 {
-	unsigned long long tmp = ~r + 1;
+	uint64_t tmp = ~r + 1;
 
 	//handle unsigned flags: ZF CF
 	if (l == r) {

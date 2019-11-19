@@ -53,7 +53,7 @@ pop {yylval.opcode = "pop"; return OPCODE;}
 
  /* \s is not supported*/
 [^ \t\r\v\f]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
-[0-9]+ {yylval.d = (unsigned long long)atoll(yytext); return NUM;}
+[0-9]+ {yylval.d = (uint64_t)atoll(yytext); return NUM;}
 "+" {return ADD;}
 "-" {return SUB;}
 "*" {return MUL;}

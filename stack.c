@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 void *stack = NULL;
 
@@ -20,21 +21,21 @@ void init_stack(void)
     set_reg_value("rbp", STACK_START_OFFSET);
 }
 
-void do_push(unsigned long long v, int size)
+void do_push(uint64_t v, int size)
 {
-    unsigned long long rsp = get_reg_value("rsp");
+    uint64_t rsp = get_reg_value("rsp");
     switch (size) {
     case 8:
         set_reg_value("rsp", rsp - 8);
-        *(unsigned long long *)(stack + rsp - 8) = v;
+        *(uint64_t *)(stack + rsp - 8) = v;
         break;
     case 4:
         set_reg_value("rsp", rsp - 4);
-        *(unsigned long *)(stack + rsp - 4) = (unsigned long)v;
+        *(uint32_t *)(stack + rsp - 4) = (uint32_t)v;
         break;
     case 2:
         set_reg_value("rsp", rsp - 2);
-        *(unsigned short *)(stack + rsp - 2) = (unsigned short)v;
+        *(uint16_t *)(stack + rsp - 2) = (uint16_t)v;
         break;    
     default:
         printf("invalid push width: %d\n", size);
@@ -42,19 +43,19 @@ void do_push(unsigned long long v, int size)
     }
 }
 
-unsigned long long do_pop(int size)
+uint64_t do_pop(int size)
 {
-    unsigned long long rsp = get_reg_value("rsp");
+    uint64_t rsp = get_reg_value("rsp");
     switch (size) {
     case 8:
         set_reg_value("rsp", rsp + 8);
-        return *(unsigned long long *)(stack + rsp);
+        return *(uint64_t *)(stack + rsp);
     case 4:
         set_reg_value("rsp", rsp + 4);
-        return (unsigned long long)(*(unsigned long *)(stack + rsp));
+        return (uint64_t)(*(uint32_t *)(stack + rsp));
     case 2:
         set_reg_value("rsp", rsp + 2);
-        return (unsigned long long)(*(unsigned short *)(stack + rsp));
+        return (uint64_t)(*(uint16_t *)(stack + rsp));
     default:
         printf("invalid pop width: %d\n", size);
         exit(-1);
@@ -63,7 +64,7 @@ unsigned long long do_pop(int size)
 
 void stack_push(const char *reg)
 {
-    unsigned long long v = get_reg_value(reg);
+    uint64_t v = get_reg_value(reg);
     switch (*reg) {
         case 'r': do_push(v, 8); break;
         case 'e': do_push(v, 4); break;
