@@ -160,7 +160,6 @@ void execute(void)
 {
 	uint64_t rip;
 	while ((rip = get_reg_value("rip")) < line_num) {
-		printf("%s\n", program[rip]);
 		do_execute(program[rip]);
 		set_reg_value("rip", get_reg_value("rip") + 1);
 	}

@@ -2,6 +2,7 @@
 %{
 #include "interpreter.tab.h"
 %}
+%s TRANS_STAT
 %%
 \"[^\f\v\n\0]*\" {
 	int length = 0, i, j;
@@ -28,16 +29,16 @@
 }
 print {yylval.opcode = "print"; return OPCODE;}
 mov {yylval.opcode = "mov"; return OPCODE;}
-je {yylval.opcode = "je"; return OPCODE;}
-jl {yylval.opcode = "jl"; return OPCODE;}
-jle {yylval.opcode = "jle"; return OPCODE;}
-jg {yylval.opcode = "jg"; return OPCODE;}
-jge {yylval.opcode = "jge"; return OPCODE;}
-jz {yylval.opcode = "jz"; return OPCODE;}
-jmp {yylval.opcode = "jmp"; return OPCODE;}
+je {yylval.opcode = "je"; BEGIN TRANS_STAT; return OPCODE;}
+jl {yylval.opcode = "jl"; BEGIN TRANS_STAT; return OPCODE;}
+jle {yylval.opcode = "jle"; BEGIN TRANS_STAT; return OPCODE;}
+jg {yylval.opcode = "jg"; BEGIN TRANS_STAT; return OPCODE;}
+jge {yylval.opcode = "jge"; BEGIN TRANS_STAT; return OPCODE;}
+jz {yylval.opcode = "jz"; BEGIN TRANS_STAT; return OPCODE;}
+jmp {yylval.opcode = "jmp"; BEGIN TRANS_STAT; return OPCODE;}
 cmp {yylval.opcode = "cmp"; return OPCODE;}
 halt {yylval.opcode = "halt"; return OPCODE;}
-call {yylval.opcode = "call"; return OPCODE;}
+call {yylval.opcode = "call"; BEGIN TRANS_STAT; return OPCODE;}
 ret {yylval.opcode = "ret"; return OPCODE;}
 push {yylval.opcode = "push"; return OPCODE;}
 pop {yylval.opcode = "pop"; return OPCODE;}
@@ -55,8 +56,6 @@ pop {yylval.opcode = "pop"; return OPCODE;}
 "[" {return LSK;}
 "]" {return RSK;}
 
- /* \s is not supported*/
-[^ \t\r\v\f]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
 [0-9]+ {yylval.d = (uint64_t)atoll(yytext); return NUM;}
 "+" {return ADD;}
 "-" {return SUB;}
@@ -66,8 +65,16 @@ pop {yylval.opcode = "pop"; return OPCODE;}
 ")" {return RBK;}
 "|" {return ABS;}
 "," {return COMA;}
+
 [\0\n] {return EOL;}
 [ \t] {}
+ /* \s is not supported*/
+<TRANS_STAT>[\.a-zA-Z0-9]+ {
+	yylval.word = strdup(yytext); return LABL;
+}
+^[^ \t\r\v\f:]+: {
+	yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;
+}
 . {printf("unsupported char %x\n", (char)*yytext);}
 %%
 

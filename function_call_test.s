@@ -1,16 +1,16 @@
 print "hello\n"
-call func1:
+call func1
 print "world\n"
 halt
 
 func1:
 print "in func1\n"
-call func2:
+call func2
 ret
 
 func2:
 print "in func2\n"
-call func3:
+call func3
 ret
 
 func3:
