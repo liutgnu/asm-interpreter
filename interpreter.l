@@ -51,6 +51,10 @@ pop {yylval.opcode = "pop"; return OPCODE;}
 [re]sp {yylval.reg = strdup(yytext); return REG;}
 [re]bp {yylval.reg = strdup(yytext); return REG;}
 
+([DQ]?WORD\ PTR)|(BYTE\ PTR) {yylval.pointer = strdup(yytext); return POINTER;}
+"[" {return LSK;}
+"]" {return RSK;}
+
  /* \s is not supported*/
 [^ \t\r\v\f]+: {yylval.word = strndup(yytext, strchr(yytext, ':') - yytext); return LABL;}
 [0-9]+ {yylval.d = (uint64_t)atoll(yytext); return NUM;}

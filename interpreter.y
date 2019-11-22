@@ -21,20 +21,23 @@ extern void free_resources(void);
 	char *opcode;
 	char *word;
 	char *str;
+	char *pointer;
 }
 
 %token <d> NUM;
 %token ADD SUB MUL DIV
-%token LBK RBK EOL
+%token LBK RBK EOL LSK RSK
 %token ABS
 %token OPCODE
 %token REG COMA QUOT LABL STR
+%token POINTER
 
 %type <d> exp factor
 %type <opcode> OPCODE
 %type <reg> REG
 %type <word> LABL
 %type <str> STR
+%type <pointer> POINTER
 %right ADD SUB
 %right MUL DIV
 
@@ -116,6 +119,18 @@ instruction: OPCODE exp {
 		set_reg_value("rip", (uint64_t)tmp);
 	}
 	free($2);
+}
+| OPCODE REG COMA POINTER LSK exp RSK {
+	int p_size = size($4);
+	if (!strcmp($1, "mov")) {
+		set_reg_value($2, stack_get($6, p_size));
+	}
+}
+| OPCODE POINTER LSK exp RSK COMA exp {
+	int p_size = size($2);
+	if (!strcmp($1, "mov")) {
+		stack_set($4, $7, p_size);
+	}
 }
 | OPCODE REG {
 	if (!strcmp($1, "push")) {

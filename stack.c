@@ -80,3 +80,50 @@ void stack_pop(const char *reg)
         default: set_reg_value(reg, do_pop(2)); break;
     }
 }
+
+uint64_t stack_get(uint64_t addr, int size)
+{
+    switch(size) {
+        case 8:
+            return *(uint64_t *)(stack + addr);
+        case 4:
+            return (uint64_t)*(uint32_t *)(stack + addr);
+        case 2:
+            return (uint64_t)*(uint16_t *)(stack + addr);
+        case 1:
+            return (uint64_t)*(uint8_t *)(stack + addr);
+        default:
+            printf("invalid stack access width: %d\n", size);
+            exit(-1);
+    }
+}
+
+void stack_set(uint64_t addr, uint64_t v, int size)
+{
+    switch(size) {
+        case 8:
+            *(uint64_t *)(stack + addr) = v; break;
+        case 4:
+            *(uint32_t *)(stack + addr) = (uint32_t)v; break;
+        case 2:
+            *(uint16_t *)(stack + addr) = (uint16_t)v; break;
+        case 1:
+            *(uint8_t *)(stack + addr) = (uint8_t)v; break;
+        default:
+            printf("invalid stack access width: %d\n", size);
+            exit(-1);
+    }
+}
+
+int size(const char *pointer)
+{
+    switch (*pointer) {
+        case 'Q': return 8;
+        case 'D': return 4;
+        case 'W': return 2;
+        case 'B': return 1;
+        default:
+            printf("invalid pointer type: %s\n", pointer);
+            exit(-1);
+    }
+}
