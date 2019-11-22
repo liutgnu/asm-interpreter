@@ -132,6 +132,18 @@ instruction: OPCODE exp {
 		stack_set($4, $7, p_size);
 	}
 }
+| OPCODE REG COMA POINTER exp LSK exp RSK {
+	int p_size = size($4);
+	if (!strcmp($1, "mov")) {
+		set_reg_value($2, stack_get($7 + $5, p_size));
+	}
+}
+| OPCODE POINTER exp LSK exp RSK COMA exp {
+	int p_size = size($2);
+	if (!strcmp($1, "mov")) {
+		stack_set($5 + $3, $8, p_size);
+	}
+}
 | OPCODE REG {
 	if (!strcmp($1, "push")) {
 		stack_push($2);
@@ -174,6 +186,9 @@ exp: factor {
 
 factor: NUM {
 	$$ = $1;
+}
+| SUB NUM {
+	$$ = ~($2) + 1;
 }
 | REG {
 	$$ = get_reg_value(yylval.reg);
