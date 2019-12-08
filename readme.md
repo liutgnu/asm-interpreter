@@ -1,6 +1,12 @@
 # Overview #
 
-## Update ##
+## Update 2 ##
+
+Recently I have done some projects which involved disassembly and reverse engineering. I realised maybe the interpreter can work as an emulator to help debug a whole or only a small section of the target binary. Not all binary files can be loaded by debugger, and directly reading assembly program is hard. It will be better having an emulator which can tell by emulating a few instructions, what memory address and cpu resigters were changed, what functions were called etc. 
+
+Project is still in development, code can be found in x86 branch.
+
+## Update 1 ##
 
 I have rewritten the entire project with flex and bison, which is more flexible and extensive. The original version can be found in master branch.
 
